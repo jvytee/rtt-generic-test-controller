@@ -4,12 +4,14 @@
 #
 cmake_minimum_required(VERSION 2.6.3)
 set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
+add_compile_options(-Wall -Wextra -pedantic)
 
 #
 # This creates a standard cmake project. You may extend this file with
 # any cmake macro you see fit.
 #
-project(robot_data_test)
+project(rtt_generic_test_controller)
 
 # Use 'source orocos_toolchain/env.sh' if the command below fails:
 find_package(OROCOS-RTT QUIET)
