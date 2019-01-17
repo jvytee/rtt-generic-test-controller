@@ -32,6 +32,7 @@ Robot_data_test::Robot_data_test(std::string const& name) : TaskContext(name) {
     addOperation("cosine", &Robot_data_test::cosine, this, RTT::ClientThread);
     addOperation("setImpedance", &Robot_data_test::setImpedance, this, RTT::ClientThread);
     addOperation("setFullImpedance", &Robot_data_test::setFullImpedance, this, RTT::ClientThread);
+    addOperation("setUniformImpedance", &Robot_data_test::setUniformImpedance, this, RTT::ClientThread);
     addOperation("print", &Robot_data_test::print, this, RTT::ClientThread);
 
     value_set = false;
@@ -197,12 +198,23 @@ void Robot_data_test::setImpedance(int idx, float stiffness, float damping) {
     out_imp_data.damping(idx) = damping;
 
     impedance_set = true;
+    write();
 }
 
 
 void Robot_data_test::setFullImpedance(const rstrt::dynamics::JointImpedance &impedance) {
     out_imp_data = impedance;
     impedance_set = true;
+    write();
+}
+
+
+void Robot_data_test::setUniformImpedance(float stiffness, float damping) {
+    out_imp_data.stiffness.fill(stiffness);
+    out_imp_data.damping.fill(damping);
+
+    impedance_set = true;
+    write();
 }
 
 

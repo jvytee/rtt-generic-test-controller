@@ -67,6 +67,7 @@ private:
     void cosine(int idx, double amplitude, double period);
     void setImpedance(int idx, float stiffness, float damping);
     void setFullImpedance(const rstrt::dynamics::JointImpedance& impedance);
+    void setUniformImpedance(float stiffness, float damping);
     void print();
 
     inline void write() {
