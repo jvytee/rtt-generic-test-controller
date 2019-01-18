@@ -13,9 +13,9 @@
 #include "cosine.hpp"
 
 
-class Robot_data_test : public RTT::TaskContext {
+class TestController : public RTT::TaskContext {
 public:
-    Robot_data_test(std::string const& name);
+    TestController(std::string const& name);
     bool configureHook();
     bool startHook();
     void updateHook();

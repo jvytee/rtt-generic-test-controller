@@ -1,8 +1,8 @@
-#include "robot_data_test-component.hpp"
+#include "testcontroller.hpp"
 #include <rtt/Component.hpp>
 #include <iostream>
 
-Robot_data_test::Robot_data_test(std::string const& name) : TaskContext(name) {
+TestController::TestController(std::string const& name) : TaskContext(name) {
     joint_state_in_flow = RTT::NoData;
     joint_state_in_data.angles.setZero(7);
     joint_state_in_data.velocities.setZero(7);
@@ -25,15 +25,15 @@ Robot_data_test::Robot_data_test(std::string const& name) : TaskContext(name) {
     jacobian_in_data.setZero(6, 7);
     this->addPort("jacobian_in_port", jacobian_in_port);
 
-    addOperation("setMode", &Robot_data_test::setMode, this, RTT::ClientThread);
-    addOperation("setValue", &Robot_data_test::setValue, this, RTT::ClientThread);
-    addOperation("setSingleValue", &Robot_data_test::setSingleValue, this, RTT::ClientThread);
-    addOperation("ramp", &Robot_data_test::ramp, this, RTT::ClientThread);
-    addOperation("cosine", &Robot_data_test::cosine, this, RTT::ClientThread);
-    addOperation("setImpedance", &Robot_data_test::setImpedance, this, RTT::ClientThread);
-    addOperation("setFullImpedance", &Robot_data_test::setFullImpedance, this, RTT::ClientThread);
-    addOperation("setUniformImpedance", &Robot_data_test::setUniformImpedance, this, RTT::ClientThread);
-    addOperation("print", &Robot_data_test::print, this, RTT::ClientThread);
+    addOperation("setMode", &TestController::setMode, this, RTT::ClientThread);
+    addOperation("setValue", &TestController::setValue, this, RTT::ClientThread);
+    addOperation("setSingleValue", &TestController::setSingleValue, this, RTT::ClientThread);
+    addOperation("ramp", &TestController::ramp, this, RTT::ClientThread);
+    addOperation("cosine", &TestController::cosine, this, RTT::ClientThread);
+    addOperation("setImpedance", &TestController::setImpedance, this, RTT::ClientThread);
+    addOperation("setFullImpedance", &TestController::setFullImpedance, this, RTT::ClientThread);
+    addOperation("setUniformImpedance", &TestController::setUniformImpedance, this, RTT::ClientThread);
+    addOperation("print", &TestController::print, this, RTT::ClientThread);
 
     value_set = false;
     single_value_set = false;
@@ -44,7 +44,7 @@ Robot_data_test::Robot_data_test(std::string const& name) : TaskContext(name) {
     this->setMode("torque");
 }
 
-bool Robot_data_test::configureHook() {
+bool TestController::configureHook() {
     out_trq_data.torques.setZero(7);
     out_vel_data.velocities.setZero(7);
     out_pos_data.angles.setZero(7);
@@ -75,11 +75,11 @@ bool Robot_data_test::configureHook() {
     return true;
 }
 
-bool Robot_data_test::startHook() {
+bool TestController::startHook() {
     return true;
 }
 
-void Robot_data_test::updateHook() {
+void TestController::updateHook() {
     // Get current time
     current_time = 1E-9 * RTT::os::TimeService::ticks2nsecs(RTT::os::TimeService::Instance()->getTicks());
 
@@ -118,15 +118,15 @@ void Robot_data_test::updateHook() {
     }
 }
 
-void Robot_data_test::stopHook() {
+void TestController::stopHook() {
 
 }
 
-void Robot_data_test::cleanupHook() {
+void TestController::cleanupHook() {
 
 }
 
-void Robot_data_test::setMode(const std::string mode) {
+void TestController::setMode(const std::string mode) {
     joint_state_in_flow = joint_state_in_port.read(joint_state_in_data);
 
     if(mode == "torque") {
@@ -155,17 +155,17 @@ void Robot_data_test::setMode(const std::string mode) {
     RTT::log(RTT::Info) << mode << " mode set!" << RTT::endlog();
 }
 
-void Robot_data_test::setValue(int idx, float val) {
+void TestController::setValue(int idx, float val) {
     (*ramp_output)(idx) = val;
     value_set = true;
 }
 
-void Robot_data_test::setSingleValue(int idx, float val) {
+void TestController::setSingleValue(int idx, float val) {
     (*ramp_output)(idx) = val;
     single_value_set = true;
 }
 
-void Robot_data_test::ramp(int idx, float target, double time) {
+void TestController::ramp(int idx, float target, double time) {
     if(lock) {
         return;
     }
@@ -182,7 +182,7 @@ void Robot_data_test::ramp(int idx, float target, double time) {
 }
 
 
-void Robot_data_test::cosine(int idx, double amplitude, double period) {
+void TestController::cosine(int idx, double amplitude, double period) {
     start_time = current_time;
 
     Eigen::VectorXf amplitudes = Eigen::VectorXf::Zero(7);
@@ -193,7 +193,7 @@ void Robot_data_test::cosine(int idx, double amplitude, double period) {
 }
 
 
-void Robot_data_test::setImpedance(int idx, float stiffness, float damping) {
+void TestController::setImpedance(int idx, float stiffness, float damping) {
     out_imp_data.stiffness(idx) = stiffness;
     out_imp_data.damping(idx) = damping;
 
@@ -202,14 +202,14 @@ void Robot_data_test::setImpedance(int idx, float stiffness, float damping) {
 }
 
 
-void Robot_data_test::setFullImpedance(const rstrt::dynamics::JointImpedance &impedance) {
+void TestController::setFullImpedance(const rstrt::dynamics::JointImpedance &impedance) {
     out_imp_data = impedance;
     impedance_set = true;
     write();
 }
 
 
-void Robot_data_test::setUniformImpedance(float stiffness, float damping) {
+void TestController::setUniformImpedance(float stiffness, float damping) {
     out_imp_data.stiffness.fill(stiffness);
     out_imp_data.damping.fill(damping);
 
@@ -218,7 +218,7 @@ void Robot_data_test::setUniformImpedance(float stiffness, float damping) {
 }
 
 
-void Robot_data_test::print() {
+void TestController::print() {
     grav_in_flow = grav_in_port.read(grav_in_data);
     coriolis_in_flow = coriolis_in_port.read(coriolis_in_data);
     inertia_in_flow = inertia_in_port.read(inertia_in_data);
@@ -236,11 +236,11 @@ void Robot_data_test::print() {
  * in one library *and* you may *not* link this library
  * with another component library. Use
  * ORO_CREATE_COMPONENT_TYPE()
- * ORO_LIST_COMPONENT_TYPE(Robot_data_test)
+ * ORO_LIST_COMPONENT_TYPE(TestController)
  * In case you want to link with another library that
  * already contains components.
  *
  * If you have put your component class
  * in a namespace, don't forget to add it here too:
  */
-ORO_CREATE_COMPONENT(Robot_data_test)
+ORO_CREATE_COMPONENT(TestController)
