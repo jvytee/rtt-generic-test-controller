@@ -24,9 +24,8 @@ public:
     }
 
 private:
+    Vector initial_conf, amplitude, ret;
     double period, frequency;
-    Vector initial_conf, amplitude;
-    Vector ret;
 };
 
 #endif // COSINE_HPP
