@@ -20,6 +20,7 @@ ENDIF()
 #
 orocos_component(rtt_generic_test_controller cosine.hpp QuinticPolynomial.hpp testcontroller.hpp testcontroller.cpp) # ...you may add multiple source files
 target_link_libraries(${CMAKE_PROJECT_NAME} ${RST-RT_LIBRARIES})
+target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic)
 
 #
 # You may add multiple orocos_component statements.
