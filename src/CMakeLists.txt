@@ -18,7 +18,7 @@ ENDIF()
 # Creates a component library librobot_data_test-<target>.so
 # and installs in the directory lib/orocos/robot_data_test/
 #
-orocos_component(rtt_generic_test_controller cosine.hpp QuinticPolynomial.hpp testcontroller.hpp testcontroller.cpp) # ...you may add multiple source files
+orocos_component(rtt-generic-test-controller cosine.hpp QuinticPolynomial.hpp testcontroller.hpp testcontroller.cpp) # ...you may add multiple source files
 target_link_libraries(${CMAKE_PROJECT_NAME} ${RST-RT_LIBRARIES})
 target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic)
 

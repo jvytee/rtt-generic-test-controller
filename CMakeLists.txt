@@ -10,7 +10,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 # This creates a standard cmake project. You may extend this file with
 # any cmake macro you see fit.
 #
-project(rtt_generic_test_controller)
+project(rtt-generic-test-controller)
 
 # Use 'source orocos_toolchain/env.sh' if the command below fails:
 find_package(OROCOS-RTT QUIET)
